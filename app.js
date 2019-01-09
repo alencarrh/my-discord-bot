@@ -1,21 +1,20 @@
 
 const Auth = require("./auth.js");
-const Discord = require('discord.js');
+const Discord = require("discord.js");
+const { logging } = require("./features/logging/logging.js");
 const client = new Discord.Client();
 
-client.on("message", message => {
 
-    var prefix = '?';
+client.on("message", message => {
+    if (message.author.bot) {
+        logging.debug("Message receive from a bot, ignoring it.");
+        return;
+    }
+
 
     if (message.content === "ping") {
-
         // the robot answers pong!
         message.channel.send("Pong!");
-
-    };
-
-    if (message.content.startsWith(prefix + "help")) {
-        message.channel.send("You did `?help` to get help.");
     };
 
     if (message.content == "mp") {
@@ -25,7 +24,12 @@ client.on("message", message => {
 });
 
 
-Auth.getAuthenticationKey().then(token => client.login(token)).catch(error => {
-    console.log(error)
+Auth.getAuthenticationKey().then(token => {
+    logging.info("Login in...");
+    client.login(token);
+    logging.info("Logged.");
+
+}).catch(error => {
+    console.log(error);
     throw error;
 });
