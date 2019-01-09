@@ -1,4 +1,4 @@
-const { logging } = require("./features/logging/logging.js");
+var logging = require("./features/logging/logging.ts").logging;
 
 module.exports = {
     getAuthenticationKey() {

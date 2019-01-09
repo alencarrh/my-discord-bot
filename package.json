@@ -4,8 +4,16 @@
     "description": "My First Discord Bot",
     "main": "bot.js",
     "author": "Alenca",
+    "scripts": {
+        "start": "ts-node ./src/app.ts"
+    },
     "dependencies": {
+        "@types/node": "^10.12.18",
         "discord.js": "^11.4.2",
+        "typescript": "^3.2.2",
         "winston": "^3.1.0"
+    },
+    "devDependencies": {
+        "ts-node": "^7.0.1"
     }
 }
