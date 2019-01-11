@@ -1,4 +1,4 @@
-var logging = require("./features/logging/logging.ts").logging;
+var logging = require("./features/logging/logging.ts").label('auth').level('info').get();
 
 module.exports = {
     getAuthenticationKey() {
