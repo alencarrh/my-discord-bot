@@ -1,11 +1,12 @@
-import { Deck, Card } from "./decks/french-deck"
+import { Card, CardNumber } from "./decks/french-deck"
+import { BlackjackDeck } from "./decks/blackjack-deck"
 var logging = require("../logging/logging.ts").label("blackjack").level('debug').get();
 
 class Game {
     status: BlackjackStatus = BlackjackStatus.FIRST_ROUND;
     dealerHand: Hand;
     userHand: Hand;
-    deck: Deck;
+    deck: BlackjackDeck;
 
     play(previousGame, message) {
 
@@ -17,7 +18,7 @@ class Game {
 
     start(message) {
         logging.debug("Starting blackjack");
-        this.deck = new Deck(4);
+        this.deck = new BlackjackDeck(4);
         this.distributeCards();
         return this.processMessage(message);
     }
@@ -43,11 +44,11 @@ class Game {
         response += "\nYour hand: ";
 
         this.userHand.cards.forEach((card) => {
-            response += card.number + ", ";
+            response += card.number.name + ", ";
         });
 
         response += "\nYour score: " + this.userHand.score();
-        response += "\nThe dealer shows: " + this.dealerHand.cards[0].number;
+        response += "\nThe dealer shows: " + this.dealerHand.cards[0].number.name;
 
         if (this.status === BlackjackStatus.FIRST_ROUND) {
             response += "\nHit, stay or double?";
@@ -92,9 +93,23 @@ class BlackjackMode {
 }
 
 class Score {
-    static calculate(cards: Card[]) {
-        // TODO
-        return 0;
+    static calculate(cards: Card[]): number {
+
+        let number_of_aces: number = cards.filter(card => card.number === CardNumber.ACE).length;
+
+        let score: number;
+        score = cards.reduce((sum, card) => sum + card.value[0], 0);
+        score += (10 * number_of_aces);
+        if (score > 21) {
+            for (let i = 0; i < number_of_aces; i++) {
+                score -= 10
+                if (score < 22) {
+                    break
+                }
+            }
+        }
+
+        return score;
     }
 }
 

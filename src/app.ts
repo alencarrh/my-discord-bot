@@ -29,6 +29,7 @@ client.on("message", message => {
     }
 });
 
+//response.contratos.some(contrato => contrato.parcelas.find(parcela => parcela.pagavel));
 
 Auth.getAuthenticationKey().then(token => {
     logging.info("Login in...");
