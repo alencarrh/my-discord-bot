@@ -10,6 +10,9 @@ var prefix = "-";
 var messageHandler = {
     "-blackjack": blackjackHandler.process,
     "-21": blackjackHandler.process,
+    "-hit": blackjackHandler.process,
+    "-double": blackjackHandler.process,
+    "-stay": blackjackHandler.process,
     "-bj": blackjackHandler.process
 }
 

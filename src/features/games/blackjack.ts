@@ -8,7 +8,7 @@ class Game {
     userHand: Hand;
     deck: BlackjackDeck;
 
-    play(previousGame, message) {
+    play(previousGame, message): any {
 
         if (!previousGame) {
             return this.start(message);
@@ -33,10 +33,21 @@ class Game {
     }
 
     processMessage(message) {
-        this.updateStatus();
         let response = this.getNormalResponse(message);
         console.log(response);
-        return response;
+        this.updateStatus();
+
+        return this.saveWithResponse(response);
+    }
+
+    saveWithResponse(response) {
+        let save = {};
+        save["deck"] = this.deck
+        save["dealerHand"] = this.dealerHand
+        save["userHand"] = this.userHand
+        save["status"] = this.status
+        save["response"] = response
+        return save
     }
 
     getNormalResponse(message) {
@@ -126,10 +137,21 @@ class Hand {
 }
 
 
+var temp = {}
+
 module.exports = {
     process(message) {
-        let result = new Game().play(null, message);
-        message.channel.send(result);
+        let game;
+        if (temp[message.author.id]) {
+            game = new Game().resume(temp[message.author.id], message);
+            if (game.status == BlackjackStatus.END_GAME) {
+                temp[message.author.id] = null;
+            }
+        } else {
+            game = new Game().play(null, message);
+            temp[message.author.id] = game;
+        }
+        message.channel.send(game.response);
     }
 }
 
